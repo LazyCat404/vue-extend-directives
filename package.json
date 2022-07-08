@@ -1,0 +1,36 @@
+{
+  "name": "vue-extend-directives",
+  "version": "1.0.0",
+  "description": "适用于vue3的自定义指令",
+  "keywords": ["directives","dir","contextmenu","指令"],
+  "main": "dist/vue-extend-directives.es.js",
+  "scripts": {
+    "dev": "vite --host",
+    "build": "vite build"
+  },
+  "devDependencies": {
+    "@types/node": "^18.0.1",
+    "@typescript-eslint/eslint-plugin": "^5.30.5",
+    "@typescript-eslint/parser": "^5.30.5",
+    "@vitejs/plugin-vue": "^2.3.3",
+    "@vue/compiler-sfc": "^3.2.37",
+    "eslint": "^8.19.0",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-prettier": "^4.2.1",
+    "eslint-plugin-vue": "^9.2.0",
+    "prettier": "^2.7.1",
+    "typescript": "^4.7.4",
+    "vite": "^2.9.13",
+    "vue": "^3.2.37",
+    "vue-tsc": "^0.38.2"
+  },
+  "author": "LazyCat404",
+  "license": "MIT",
+  "files": [
+    "dist"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:LazyCat404/vue-extend-directives.git"
+  }
+}
