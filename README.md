@@ -36,7 +36,7 @@ app.use(vueExtendDirectives);
 
         ![](./images/contextmenu.png)
 
-        ```json
+        ```js
         [{
             label: string;      // 标题
             click?: object;     // 点击事件，存在子菜单时自定忽略
@@ -51,3 +51,6 @@ app.use(vueExtendDirectives);
             }]
         }]
         ```
+
+
+[badge-language]:https://github.com/LazyCat404/vue-extend-directives
