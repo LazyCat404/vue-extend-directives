@@ -28,7 +28,8 @@
   "author": "LazyCat404",
   "license": "MIT",
   "files": [
-    "dist"
+    "dist",
+    "directives.d.ts"
   ],
   "repository": {
     "type": "git",
