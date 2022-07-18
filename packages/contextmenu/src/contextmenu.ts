@@ -13,9 +13,9 @@ function rightClick(event: MouseEvent, binding: DirectiveBinding) {
 }
 function contextMenuRender(binding: DirectiveBinding): void {
   if (binding.value) {
-    customContextMenu(binding.value);
+    customContextMenu(binding.value,binding);
   } else {
-    console.log(1);
+    console.warn('contextmenu 需要接收一个参数，可以是数组或一个组件');
   }
 }
 export interface contextMenuList {
@@ -37,16 +37,34 @@ export interface contextMenuList {
 export interface contextMenuProps {
   renderList: Array<unknown>;
 }
+export interface contextMenu {
+  sfc:Component,
+  props?:Object,
+  emit?:Object
+}
 
 /**
  * 自定义渲染
  * @param contextmenuRef 单文件组件实例、对象数组
  */
-function customContextMenu(contextmenuRef: Component | Array<contextMenuList>): void {
+function customContextMenu(contextmenuRef: Component | Array<contextMenuList> | contextMenu,binding:DirectiveBinding): void {
   if (Object.prototype.toString.call(contextmenuRef) === '[object Array]') {
     customArrayMenu(contextmenuRef as Array<contextMenuList>);
-  } else {
-    createApp(contextmenuRef).mount(menuWrapper as HTMLElement);
+  } else { 
+    if((contextmenuRef as contextMenu).sfc){
+      contextmenuRef = contextmenuRef as contextMenu;
+      let clickOption = null
+      if(contextmenuRef.emit){
+        if( typeof contextmenuRef.emit === 'function'){
+          clickOption = contextmenuRef.emit 
+        }else{
+          console.warn('emit类型只能为function')
+        }
+      }
+      createApp(contextmenuRef.sfc,contextmenuRef.props).mount(menuWrapper as HTMLElement);
+    }else{
+      createApp(contextmenuRef).mount(menuWrapper as HTMLElement);
+    }
   }
   clickListener();
 }

@@ -30,9 +30,23 @@ app.use(vueExtendDirectives);
 
 - 参数：非必填，展示默认样式，无实际作用
 
-    - 单文件组件
+    - [单文件组件](./test/contextmenu/sfc-menu.vue)
+        
+        ```js
+        import sfcMenu from './sfc-menu.vue';
+        // 无参数：
+        <div v-contextmenu="sfcMenu"></div>
 
-    - 对象数组：
+        /**
+         * 有参数：
+         * sfc：必传，引入的单文件组件实例
+         * props：非必传，对象，需要传递的属性、方法
+         */
+        <div v-contextmenu="{sfc:sfcMenu,props:{list,clickFun}}"></div>
+
+        ```
+
+    - [对象数组：](./test/contextmenu/array-menu.vue)
 
         ![](./images/contextmenu.png)
 
