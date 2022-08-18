@@ -4,7 +4,7 @@
     <li
       v-for="(item, i) in (renderList as any)"
       :key="i"
-      @click="clickMenu(item.disable || (item.children && item.children.length) ? null : item.click)"
+      @click="clickMenu(item.disable || (item.children && item.children.length) ? null : item.click,item.label)"
       :disabled="item.disable ? '' : null"
       :divid="item.divid && i !== renderList.length - 1 ? '' : null"
     >
@@ -18,7 +18,7 @@
         <li
           v-for="(sub, key) in item.children"
           :key="key"
-          @click="clickMenu(sub.disable ? null : sub.click)"
+          @click="clickMenu(sub.disable ? null : sub.click,sub.label)"
           :disabled="sub.disable ? '' : null"
         >
           {{ sub.label }}
@@ -41,9 +41,9 @@ export default defineComponent({
     function initRender() {
       state.isRender = true;
     }
-    function clickMenu(par: any) {
-      if (par) {
-        par();
+    function clickMenu(callBack: any,par:string) {
+      if (callBack) {
+        callBack(par);
       }
     }
     return {

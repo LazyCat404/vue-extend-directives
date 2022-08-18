@@ -53,18 +53,17 @@ app.use(vueExtendDirectives);
         ```js
         [{
             label: string;      // 标题
-            click?: object;     // 点击事件，存在子菜单时自定忽略
+            click?: object;     // 点击事件名，存在子菜单时自动忽略
             divid?: true;       // 分割线
             disable?: boolean;  // 是否禁用
             ico?: string;       // 图标：图片地址
             sub?: string;       // 副标题
             children?: [{       // 子菜单
                 label: string;
-                click?: object;
+                click?: object; // 点击事件名
                 disable?: boolean;
             }]
         }]
         ```
+        PS：`click`（回调函数）自动接收同级`label`作为参数
 
-
-[badge-language]:https://github.com/LazyCat404/vue-extend-directives

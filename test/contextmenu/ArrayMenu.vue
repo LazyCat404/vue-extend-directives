@@ -1,13 +1,13 @@
 <template>
   <div v-contextmenu="list">contextmenu 数组渲染菜单</div>
-  <div v-contextmenu="sfcMenu">contextmenu 单文件组件渲染菜单</div>
+  <div v-contextmenu="SfcMenu">contextmenu 单文件组件渲染菜单</div>
   <div v-contextmenu="{
-    sfc:sfcMenu,
+    sfc:SfcMenu,
     props:{list,clickFun},
   }">contextmenu 单文件组件渲染传参菜单</div>
 </template>
 <script lang="ts" setup>
-import sfcMenu from './sfc-menu.vue';
+import SfcMenu from './SfcMenu.vue';
  
 function clickFun(a:unknown) {
   console.log('点击了菜单',a);
@@ -47,4 +47,3 @@ let list = [
 </script>
 
 <style></style>
-:

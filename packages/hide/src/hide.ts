@@ -1,4 +1,4 @@
-let bindObj: { value: unknown } = { value: undefined };
+let bindObj = new WeakMap()
 let tipDom: HTMLElement | null = null;
 let timer: any = null;
 let isInTip = false;
@@ -71,10 +71,11 @@ function inDom(event: MouseEvent) {
     tipDom.style.top = `${tipTopOffset}px`;
   }
 }
-function outDom() {
+function outDom(event:MouseEvent) {  
   if (tipDom && document.body.contains(tipDom)) {
+    let isCopy =  bindObj.get(event.target as EventTarget)
     // 默认可以复制
-    if (bindObj.value || bindObj.value === undefined) {
+    if (isCopy.value || isCopy.value === undefined) {
       tipDom?.addEventListener('mouseenter', inTip);
       if (!timer) {
         timer = setTimeout(() => {
@@ -110,7 +111,7 @@ const hide = {
   name: 'hide',
   dir: {
     mounted(el: HTMLElement, binding: { value: unknown }): void {
-      bindObj = binding;
+      bindObj.set(el,binding)
       el.setAttribute('style', `overflow: hidden;white-space: nowrap;text-overflow: ellipsis;`);
       el.addEventListener('mouseenter', inDom);
       el.addEventListener('mouseleave', outDom);

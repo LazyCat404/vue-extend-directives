@@ -1,10 +1,8 @@
-// 组件渲染文件
 import { createApp } from 'vue';
-import arrayMenu from './contextmenu/array-menu.vue';
-import hide from './hide/hide.vue';
-import extendDirect from '../packages/index';
+import Index from './Index.vue'
+import vueExtendDirectives from '../packages/index';
 
-const app = createApp(arrayMenu);
+const app = createApp(Index);
+
 // 自定义指令
-
-app.use(extendDirect).mount('#app');
+app.use(vueExtendDirectives).mount('#app');

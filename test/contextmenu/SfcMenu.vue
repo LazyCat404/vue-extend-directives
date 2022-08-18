@@ -20,8 +20,12 @@ const props = defineProps({
     clickFun:Function
 })
 function childSFC(){
-  console.log('接到参数：',props);
-  (props.clickFun as Function)();
+  if(props.clickFun){
+    console.log('接到参数：',props);
+    (props.clickFun as Function)();
+  }else{
+    console.log('点击了菜单：删除');
+  }
 
 }
 </script>
