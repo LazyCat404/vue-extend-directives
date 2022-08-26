@@ -9,23 +9,25 @@ export let pageMonitorInstance = new WeakMap()
 // 收集实例
 function collectInstance(el:HTMLElement,key:unknown){
     // 监控信息
-    pageMonitorInfor.set(el,{
-        el,
-        key,
-        type:'page',
-        rTime:[],   // 曝光周期
-        sTime:new Date().getTime(), //  开始时间
-        eTime:null,  // 结束时间,
-        path:window.location.href
-    })
-    // 监控实例
-    pageMonitorInstance.set(el,{
-        observer:new IntersectionObserver((entries:IntersectionObserverEntry[])=>{
-            observerCallback(entries,pageMonitorInstance,pageMonitorInfor)
-        }, observerConfig),
-        status:false
-    })  
-    pageMonitorInstance.get(el).observer.observe(el);
+    if(!pageMonitorInfor.get(el)){
+        pageMonitorInfor.set(el,{
+            el,
+            key,
+            type:'page',
+            rTime:[],   // 曝光周期
+            sTime:new Date().getTime(), //  开始时间
+            eTime:null,  // 结束时间,
+            path:window.location.href
+        })
+        // 监控实例
+        pageMonitorInstance.set(el,{
+            observer:new IntersectionObserver((entries:IntersectionObserverEntry[])=>{
+                observerCallback(entries,pageMonitorInstance,pageMonitorInfor)
+            }, observerConfig),
+            status:false
+        })  
+        pageMonitorInstance.get(el).observer.observe(el);
+    }
 }
 
 // 解析监控dom，实现音视频、动画等特殊监听

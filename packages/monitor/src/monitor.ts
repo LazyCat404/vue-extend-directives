@@ -45,7 +45,8 @@ const monitor = {
             monitorCore(binding.value)
         },
         beforeUnmount(el: HTMLElement): void {
-            
+            //  解除监听
+            window.removeEventListener('click',monitorListener)
         }
     }
 };
