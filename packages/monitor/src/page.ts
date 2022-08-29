@@ -15,8 +15,8 @@ function collectInstance(el:HTMLElement,key:unknown){
             key,
             type:'page',
             rTime:[],   // 曝光周期
-            sTime:new Date().getTime(), //  开始时间
-            eTime:null,  // 结束时间,
+            sTime:new Date().getTime(), //  创建时间
+            eTime:null,  // 销毁时间,
             path:window.location.href
         })
         // 监控实例

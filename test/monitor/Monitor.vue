@@ -23,7 +23,7 @@ function acceptMonitorInfor(par:unknown){
 <style scoped>
 .monitor-page{
     width: 300px;
-    height: 150px;
+    height: 350px;
     margin-top: 20px;
     background: #ddd;
     display: -webkit-flex; 

@@ -1,3 +1,5 @@
+import { inforDispose } from "../monitor"
+
 // 观察者（曝光）频率
 export const observerConfig:IntersectionObserverInit = {
     threshold:[0, 0.2, 0.4, 0.6, 0.8, 1] 
@@ -8,20 +10,34 @@ export function observerCallback(entries:IntersectionObserverEntry[],instance:We
     const targetInstance = instance.get(entries[0].target)
     const targetInfor = infor.get(entries[0].target)
     const target = entries[0]
-    if(target.intersectionRatio < 0.4){
-        if(targetInfor.rTime.length){
-            if(targetInfor.rTime[targetInfor.rTime.length -1].length == 1){
-                targetInfor.rTime[targetInfor.rTime.length -1].push(new Date().getTime())
+    if(target.isIntersecting || !targetInstance.status){
+        if(target.intersectionRatio < 0.4){
+            if(targetInfor.rTime.length){
+                if(targetInfor.rTime[targetInfor.rTime.length -1].length == 1){
+                    targetInfor.rTime[targetInfor.rTime.length -1].push(new Date().getTime())
+                }
+            }
+        }else if(target.intersectionRatio >= 0.6){
+            if(targetInfor.rTime.length){
+                if(targetInfor.rTime[targetInfor.rTime.length -1].length == 2){
+                    targetInfor.rTime.push([new Date().getTime()])
+                }
+            }else{
+                targetInfor.rTime.push([targetInstance.status ? new Date().getTime() : targetInfor.sTime])
             }
         }
-    }else if(target.intersectionRatio >= 0.6){
+        targetInstance.status = true
+    }else{ 
+        // dom 实例被隐藏（未销毁）
+        // 信息补全
         if(targetInfor.rTime.length){
-            if(targetInfor.rTime[targetInfor.rTime.length -1].length == 2){
-                targetInfor.rTime.push([new Date().getTime()])
+            if(targetInfor.rTime[targetInfor.rTime.length - 1].length == 1){
+                targetInfor.rTime[targetInfor.rTime.length - 1].push(new Date().getTime())
             }
-        }else{
-            targetInfor.rTime.push([targetInstance.status ? new Date().getTime() : targetInfor.sTime])
+        }
+        if(targetInfor.type == 'page'){
+            // 回传监控信息
+            inforDispose({...targetInfor,monitorType:'hide'})
         }
     }
-    targetInstance.status = true
 }

@@ -16,8 +16,8 @@ function collectInstance(el:HTMLElement,key:unknown){
             type:'oper',
             click:0,    // 点击次数
             rTime:[],   // 曝光周期
-            sTime:new Date().getTime(), //  开始时间
-            eTime:null,  // 结束时间
+            sTime:new Date().getTime(), //  创建时间
+            eTime:null,  // 销毁时间
             url:window.location.href
         })
         // 监控实例
