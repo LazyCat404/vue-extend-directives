@@ -1,5 +1,13 @@
 import { operMonitorInstance } from "./oper"
 
+// 音频、视频、动画相关标签
+export const specialNode =  [
+    'svg',
+    'canvas',
+    'audio',
+    'video',
+]
+
 export let monitorConfig = {
     useAble:false,
     callBack:(par:unknown)=>{}

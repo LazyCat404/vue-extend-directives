@@ -1,5 +1,5 @@
 import { observerCallback, observerConfig } from "./util/exposure";
-import { inforDispose  } from "./monitor";
+import { inforDispose, specialNode  } from "./monitor";
 
 // 监控信息
 export let operMonitorInfor = new WeakMap()
@@ -9,28 +9,35 @@ export let operMonitorInstance = new WeakMap()
 // 收集实例
 function collectInstance(el:HTMLElement,key:unknown){
     if(!operMonitorInfor.get(el)){
-        // 监控信息
-        operMonitorInfor.set(el,{
-            el,
-            key,
-            type:'oper',
-            click:0,    // 点击次数
-            rTime:[],   // 曝光周期
-            sTime:new Date().getTime(), //  创建时间
-            eTime:null,  // 销毁时间
-            url:window.location.href
-        })
-        // 监控实例
-        operMonitorInstance.set(el,{
-            observer:new IntersectionObserver((entries:IntersectionObserverEntry[])=>{
-                observerCallback(entries,operMonitorInstance,operMonitorInfor)
-            }, observerConfig),
-            click:()=>{
-                clickMonitor(el)
-            },
-            status:false
-        })  
-        operMonitorInstance.get(el).observer.observe(el);
+        const nodeName = el.nodeName.toLowerCase()
+        const parentName = el.parentNode? el.parentNode.nodeName.toLowerCase():null
+        if(specialNode.includes(nodeName) || (parentName && specialNode.includes(parentName))){
+            console.warn('音频、视频、动画请使用 v-page')
+        }else{
+            // 监控信息
+            operMonitorInfor.set(el,{
+                el,
+                key,
+                type:'oper',
+                click:0,    // 点击次数
+                rTime:[],   // 曝光周期
+                sTime:new Date().getTime(), //  创建时间
+                eTime:null,  // 销毁时间
+                url:window.location.href
+            })
+            console.log()
+            // 监控实例
+            operMonitorInstance.set(el,{
+                observer:new IntersectionObserver((entries:IntersectionObserverEntry[])=>{
+                    observerCallback(entries,operMonitorInstance,operMonitorInfor)
+                }, observerConfig),
+                click:()=>{
+                    clickMonitor(el)
+                },
+                status:false
+            })  
+            operMonitorInstance.get(el).observer.observe(el);
+        }
     }
 }
 
