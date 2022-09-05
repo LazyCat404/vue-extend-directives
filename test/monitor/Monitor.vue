@@ -2,8 +2,8 @@
     <div v-monitor="acceptMonitorInfor">
         <button @click="state.isPage=false">隐藏</button>
         <button v-oper @click="state.isPage=true">显示</button>
-        <div v-page v-show="state.isPage" class="monitor-page">
-            <audio controls="true">
+        <div v-show="state.isPage" class="monitor-page">
+            <audio v-media controls="true">
                 <source src="./assets/test.mp3" type="audio/mpeg" />
             </audio>
         </div>

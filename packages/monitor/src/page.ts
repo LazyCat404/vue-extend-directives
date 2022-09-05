@@ -1,5 +1,5 @@
 import { observerCallback, observerConfig } from "./util/exposure";
-import { inforDispose } from "./monitor";
+import { inforDispose, specialNode } from "./monitor";
 
 // 监控信息
 export let pageMonitorInfor = new WeakMap()
@@ -10,23 +10,30 @@ export let pageMonitorInstance = new WeakMap()
 function collectInstance(el:HTMLElement,key:unknown){
     // 监控信息
     if(!pageMonitorInfor.get(el)){
-        pageMonitorInfor.set(el,{
-            el,
-            key,
-            type:'page',
-            rTime:[],   // 曝光周期
-            sTime:new Date().getTime(), //  创建时间
-            eTime:null,  // 销毁时间,
-            path:window.location.href
-        })
-        // 监控实例
-        pageMonitorInstance.set(el,{
-            observer:new IntersectionObserver((entries:IntersectionObserverEntry[])=>{
-                observerCallback(entries,pageMonitorInstance,pageMonitorInfor)
-            }, observerConfig),
-            status:false
-        })  
-        pageMonitorInstance.get(el).observer.observe(el);
+        const nodeName = el.nodeName.toLowerCase()
+        const parentName = el.parentNode ? el.parentNode.nodeName.toLowerCase():null
+        if(specialNode.includes(nodeName) || (parentName && specialNode.includes(parentName))){
+            console.warn('音频、视频、动画请使用 v-media')
+        }else{
+            // 监控信息
+            pageMonitorInfor.set(el,{
+                el,
+                key,
+                type:'page',
+                rTime:[],   // 曝光周期
+                sTime:new Date().getTime(), //  创建时间
+                eTime:null,  // 销毁时间,
+                path:window.location.href
+            })
+            // 监控实例
+            pageMonitorInstance.set(el,{
+                observer:new IntersectionObserver((entries:IntersectionObserverEntry[])=>{
+                    observerCallback(entries,pageMonitorInstance,pageMonitorInfor)
+                }, observerConfig),
+                status:false
+            })  
+            pageMonitorInstance.get(el).observer.observe(el);
+        }
     }
 }
 

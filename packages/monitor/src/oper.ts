@@ -12,7 +12,7 @@ function collectInstance(el:HTMLElement,key:unknown){
         const nodeName = el.nodeName.toLowerCase()
         const parentName = el.parentNode? el.parentNode.nodeName.toLowerCase():null
         if(specialNode.includes(nodeName) || (parentName && specialNode.includes(parentName))){
-            console.warn('音频、视频、动画请使用 v-page')
+            console.warn('音频、视频、动画请使用 v-media')
         }else{
             // 监控信息
             operMonitorInfor.set(el,{

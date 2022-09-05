@@ -1,4 +1,7 @@
+import { mediaMonitorInstance } from "./media"
 import { operMonitorInstance } from "./oper"
+
+let isStartMediaMonitor = false // 是否开启媒体监听
 
 // 音频、视频、动画相关标签
 export const specialNode =  [
@@ -28,7 +31,7 @@ function monitorCore(callBack:any){
                 callBack,   // 回调函数
                 useAble:true    // 监控可用
             }
-            window.addEventListener('click',monitorListener)
+            window.addEventListener('click',monitorListener,true)
         }else{
             console.error('指令 v-monitor 的参数必须是 function')
         }
@@ -36,13 +39,46 @@ function monitorCore(callBack:any){
         console.warn('指令 v-monitor 未设置参数方法')
     } 
 }
+// 启动媒体监听（不包括动画）
+export function startMediaMonitor(){
+    if(!isStartMediaMonitor){
+        // 仅开启一次
+        window.addEventListener('error',monitorListener,true)
+        window.addEventListener('ratechange',monitorListener,true)
+        window.addEventListener('volumechange',monitorListener,true)
+        window.addEventListener('seeked',monitorListener,true)
+        window.addEventListener('seeking',monitorListener,true)
+        window.addEventListener('ended',monitorListener,true)
+        isStartMediaMonitor = true
+    }
+}
 
-// 监听事件
+// 监听回调事件
 function monitorListener(el:Event){
+    el = el || window.event
     if(el.target){
-        if(operMonitorInstance.get(el.target)){
-            operMonitorInstance.get(el.target)[el.type]()
-        }
+        const nodeName = (el.target as any ).nodeName.toLowerCase()
+        const parentName = (el.target as any ).parentNode ? (el.target as any ).parentNode.nodeName.toLowerCase() : null 
+        if(specialNode.includes(nodeName) || (parentName && specialNode.includes(parentName))){
+            // 媒体监听
+            if(specialNode.includes(nodeName)){
+                if(mediaMonitorInstance.get(el.target)){
+                    console.log(el)
+                    mediaMonitorInstance.get(el.target)[el.type]()
+                }
+            }else{
+                if(mediaMonitorInstance.get((el.target as any ).parentNode)){
+                    mediaMonitorInstance.get((el.target as any ).parentNode)[el.type]()
+                }
+            }
+        }else{  
+            // （鼠标）操作监听
+            if(operMonitorInstance.get(el.target)){
+                operMonitorInstance.get(el.target)[el.type]()
+            }
+        }  
+    }else{
+        console.error('未检测倒合适 dom，请检查后重新挂载')
     }
 }
 
