@@ -2,7 +2,7 @@ import { mediaMonitorInstance } from "./media"
 import { operMonitorInstance } from "./oper"
 
 let isStartMediaMonitor = false // 是否开启媒体监听
-
+let isStartOperMonitor = false // 是否开启操作监听
 // 音频、视频、动画相关标签
 export const specialNode =  [
     'svg',
@@ -50,6 +50,14 @@ export function startMediaMonitor(){
         window.addEventListener('seeking',monitorListener,true)
         window.addEventListener('ended',monitorListener,true)
         isStartMediaMonitor = true
+    }
+}
+
+// 启动操作监听
+export function startOperMonitor(){
+    if(!isStartOperMonitor){
+        window.addEventListener('click',monitorListener,true)
+        isStartOperMonitor = true
     }
 }
 

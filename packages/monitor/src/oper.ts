@@ -1,5 +1,5 @@
 import { observerCallback, observerConfig } from "./util/exposure";
-import { inforDispose, specialNode  } from "./monitor";
+import { inforDispose, specialNode, startOperMonitor } from "./monitor";
 
 // 监控信息
 export let operMonitorInfor = new WeakMap()
@@ -25,7 +25,6 @@ function collectInstance(el:HTMLElement,key:unknown){
                 eTime:null,  // 销毁时间
                 url:window.location.href
             })
-            console.log()
             // 监控实例
             operMonitorInstance.set(el,{
                 observer:new IntersectionObserver((entries:IntersectionObserverEntry[])=>{
@@ -37,16 +36,17 @@ function collectInstance(el:HTMLElement,key:unknown){
                 status:false
             })  
             operMonitorInstance.get(el).observer.observe(el);
+            startOperMonitor()
         }
     }
 }
 
 // click 监听事件
 function clickMonitor(el:HTMLElement){
-    // TODO:若点击即销毁，则无法执行
+    
     const monitorInfor = operMonitorInfor.get(el);
     monitorInfor.click++;
-    // 回传监控信息
+    // 回传监控信息：立即回传是否清空监听信息
     inforDispose({...monitorInfor,monitorType:'click'})
 }
 
