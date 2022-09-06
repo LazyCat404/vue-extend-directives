@@ -8,13 +8,13 @@ export let pageMonitorInstance = new WeakMap()
 
 // 收集实例
 function collectInstance(el:HTMLElement,key:unknown){
-    // 监控信息
-    if(!pageMonitorInfor.get(el)){
-        const nodeName = el.nodeName.toLowerCase()
-        const parentName = el.parentNode ? el.parentNode.nodeName.toLowerCase():null
-        if(specialNode.includes(nodeName) || (parentName && specialNode.includes(parentName))){
-            console.warn('音频、视频、动画请使用 v-media')
-        }else{
+    const nodeName = el.nodeName.toLowerCase()
+    const parentName = el.parentNode ? el.parentNode.nodeName.toLowerCase():null
+    if(specialNode.includes(nodeName) || (parentName && specialNode.includes(parentName))){
+        console.warn('音频、视频、动画请使用 v-media')
+    }else{
+        // 监控信息
+        if(!pageMonitorInfor.get(el)){
             // 监控信息
             pageMonitorInfor.set(el,{
                 el,
