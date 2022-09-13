@@ -6,7 +6,7 @@ export let mediaMonitorInfor = new WeakMap()
 export let mediaMonitorInstance = new WeakMap()
 
 // 收集实例
-export function collectInstance(el:HTMLElement,key:unknown){
+export function collectInstance(el:HTMLAudioElement,key:unknown){
     // 监控信息
     if(!mediaMonitorInfor.get(el)){
         const nodeName = el.nodeName.toLowerCase()
@@ -15,7 +15,7 @@ export function collectInstance(el:HTMLElement,key:unknown){
             if(specialNode.includes(nodeName)){
                 collectMediaInstance(el,key)
             }else{
-                collectMediaInstance(el.parentNode as HTMLElement,key)
+                collectMediaInstance(el.parentNode as HTMLAudioElement,key)
             }
         }else{
             console.warn('检测到非媒体组件使用了 v-media，已忽略')
@@ -23,90 +23,78 @@ export function collectInstance(el:HTMLElement,key:unknown){
     }
 }
 
-// 媒体类实例收集
-function collectMediaInstance(el:HTMLElement,key:unknown){
-    const nodeName = el.nodeName.toLowerCase()
-    // 监控信息
-    mediaMonitorInfor.set(el,{
-        el,
-        key,
-        type:'media',
-        error:0,        // 数据加载失败
-        ended:0,        // 播放结束
-        intact:0,       // 完整播放
-        rate:[],        // 播放速度
-        volume:[],      // 音量
-        fragment:[],    // 播放片段（快进时产生）
-        path:window.location.href
-    })
-    // 监控实例
-    mediaMonitorInstance.set(el,{
-        isRatechange:false, // 防止方法连续调用两遍
-        error:()=>{
-            mediaError(el)
-        },
-        ratechange(){
-            if(this.isRatechange){
-                mediaRatechange(el)
-            }else{
-                this.isRatechange = true
-            }
-        },
-        volumechange:()=>{
-            mediaVolume(el)
-        },
-        seeked:()=>{
-            mediaSeeked(el)
-        },
-        seeking:()=>{
-            mediaSeeking(el)
-        },
-        ended:()=>{
-            mediaEnded(el)
-        },
+// 媒体监控相关设置
+const mediaMonitorConfig = {
+    intactRate:0.9,   // 完播率(1-0)
+}
 
-    }) 
-    startMediaMonitor()       
+// 媒体类实例收集
+function collectMediaInstance(el:HTMLElement|HTMLAudioElement,key:unknown){
+    const nodeName = el.nodeName.toLowerCase()
+    const parentName = el.parentNode ? el.parentNode.nodeName.toLowerCase():null
+    if(specialNode.includes(nodeName) || (parentName && specialNode.includes(parentName))){
+        // 挂载点判断
+        if(!specialNode.includes(nodeName)&& (parentName && specialNode.includes(parentName))){
+            el =  el.parentNode as HTMLAudioElement
+        }
+        // 监控信息
+        if(!mediaMonitorInfor.get(el)){
+            // 监控信息
+            mediaMonitorInfor.set(el,{
+                el,
+                key,
+                type:'media',
+                error:0,        // 数据加载失败
+                intact:0,       // 完整播放
+                path:window.location.href
+            })
+            // 监控实例
+            mediaMonitorInstance.set(el,{
+                error:()=>{
+                    mediaError(el as HTMLAudioElement)
+                },
+                ended:()=>{
+                    mediaEnded(el as HTMLAudioElement)
+                },
+            }) 
+            startMediaMonitor()  
+        }  
+    }
+   
 }
 
 // 播放结束
-function mediaEnded(el:HTMLElement){
-    console.log('播放结束')
+function mediaEnded(el:HTMLAudioElement){
+    intactCompute(el)
 }
 // 加载失败
-function mediaError(el:HTMLElement){    
-    console.log('加载失败')
-}
-// 速率改变
-function mediaRatechange(el:HTMLElement){
-    mediaMonitorInstance.get(el).isRatechange = false 
-    console.log('速率改变')
-}
-// 音量改变
-function mediaVolume(el:HTMLElement){
-    console.log('音量改变')
-}
-// 快进/回退
-function mediaSeeking(el:HTMLElement){
-    console.log('快进/回退')
-}
-// 快进/回退-结束
-function mediaSeeked(el:HTMLElement){
-    console.log('快进/回退-结束')
+function mediaError(el:HTMLAudioElement){    
+    mediaMonitorInfor.get(el).error++ 
 }
 
+// 完整播放计算
+function intactCompute(el:HTMLAudioElement){
+    // 完播率计算
+    let played = el.played        // TimeRanges
+    let duration = el.duration    // 媒体总长度
+    // 输出片段
+    if(played.length){
+        let playedTime = 0  // 已播时常
+        for(let i = 0; i < played.length; i++){
+            playedTime = playedTime + (played.end(i) - played.start(i))
+        }
+        if(playedTime > duration * mediaMonitorConfig.intactRate || playedTime == duration * mediaMonitorConfig.intactRate ){
+            mediaMonitorInfor.get(el).intact++
+        }
+    }
+}
 
-// 销毁实例（待修改）
-function destroyInstance(el:HTMLElement){
+// 销毁实例
+function destroyInstance(el:HTMLAudioElement){
     const destroyInfor = mediaMonitorInfor.get(el)
     const destroyInstance = mediaMonitorInstance.get(el)
     // 信息补全
     destroyInfor.eTime = new Date().getTime()
-    if(destroyInfor.rTime.length){
-        if(destroyInfor.rTime[destroyInfor.rTime.length - 1].length == 1){
-            destroyInfor.rTime[destroyInfor.rTime.length - 1].push(destroyInfor.eTime)
-        }
-    }
     // 回传监控信息
     inforDispose({...destroyInfor,monitorType:'destroy'})
 
@@ -118,10 +106,10 @@ function destroyInstance(el:HTMLElement){
 const media = {
     name: 'media',
     dir: {
-        mounted(el: HTMLElement, binding: { value: unknown }): void {
+        mounted(el: HTMLAudioElement, binding: { value: unknown }): void {
             collectInstance(el,binding.value)
         },
-        beforeUnmount(el: HTMLElement): void {
+        beforeUnmount(el: HTMLAudioElement): void {
             destroyInstance(el)
         }
     }

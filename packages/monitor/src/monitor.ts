@@ -44,12 +44,6 @@ export function startMediaMonitor(){
     if(!isStartMediaMonitor){
         // 仅开启一次
         window.addEventListener('error',monitorListener,true)
-        window.addEventListener('ratechange',monitorListener,true)
-        window.addEventListener('volumechange',monitorListener,true)
-        window.addEventListener('playing',monitorListener,true)
-        window.addEventListener('seeked',monitorListener,true)
-        window.addEventListener('seeking',monitorListener,true)
-        window.addEventListener('pause',monitorListener,true)   
         window.addEventListener('ended',monitorListener,true)
         isStartMediaMonitor = true
     }
