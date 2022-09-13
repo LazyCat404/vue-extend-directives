@@ -37,11 +37,6 @@ function collectInstance(el:HTMLElement,key:unknown){
     }
 }
 
-// 解析监控dom，实现音视频、动画等特殊监听
-// function analysisEl(el:HTMLElement){
-//     console.log(el)
-// }
-
 // 销毁实例
 function destroyInstance(el:HTMLElement){
     const destroyInfor = pageMonitorInfor.get(el)

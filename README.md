@@ -67,3 +67,58 @@ app.use(vueExtendDirectives);
         ```
         PS：`click`（回调函数）自动接收同级`label`作为参数
 
+
+## 埋点指令集：v-monitor、v-page、v-oper、v-media
+
+> 通过一系列的简单指令，实现用户页面操作行为收集
+### 核心指令：v-monitor
+
+> 接收一个回调函数作为参数
+
+### 页面指令：v-page
+
+> 实例销毁时，进行信息收集
+
+```js
+// 收集信息
+{
+    el,                         // 挂载点
+    key,                        // 自定义参数
+    type:'page',                // 指令类型
+    rTime:[],                   // 曝光周期
+    sTime:new Date().getTime(), // 创建时间
+    eTime:null,                 // 销毁时间
+    path:window.location.href   // url 地址
+}
+```
+### 操作指令：v-oper
+
+> 点击、销毁时进行信息收集
+
+```js
+// 收集信息
+{
+    el,                         // 挂载点
+    key,                        // 自定义参数
+    type:'oper',                // 指令类型
+    click:0,                    // 点击次数
+    rTime:[],                   // 曝光周期
+    sTime:new Date().getTime(), // 创建时间
+    eTime:null,                 // 销毁时间
+    path:window.location.href   // url 地址
+}
+```
+### 媒体指令：v-media
+
+> 实例销毁时，进行信息收集
+
+```js
+// 收集信息
+{
+    el,                         // 挂载点
+    key,                        // 自定义参数
+    type:'media',               // 指令类型
+    error:0,                    // 数据加载失败
+    intact:0,                   // 完整播放
+    path:window.location.href   // url 地址
+}

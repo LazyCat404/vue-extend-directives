@@ -31,7 +31,6 @@ function monitorCore(callBack:any){
                 callBack,   // 回调函数
                 useAble:true    // 监控可用
             }
-            window.addEventListener('click',monitorListener,true)
         }else{
             console.error('指令 v-monitor 的参数必须是 function')
         }
