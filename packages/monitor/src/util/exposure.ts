@@ -55,6 +55,7 @@ export function timeCorrect(){
     window.addEventListener('click',timeCorrectCount,true)          // 鼠标-左键
     window.addEventListener('contextmenu',timeCorrectCount,true)    // 鼠标-右键
     window.addEventListener('wheel',timeCorrectCount,true)          // 鼠标-滚轮
+    window.addEventListener('timeupdate',timeCorrectCount,true)     // 播放位置改变
     openSilenceTime = true
 }
 
