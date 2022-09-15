@@ -3,6 +3,7 @@ import { operMonitorInstance } from "./oper"
 
 let isStartMediaMonitor = false // 是否开启媒体监听
 let isStartOperMonitor = false // 是否开启操作监听
+export let silenceTime:any[] = []
 // 音频、视频、动画相关标签
 export const specialNode =  [
     'svg',
@@ -13,13 +14,20 @@ export const specialNode =  [
 
 export let monitorConfig = {
     useAble:false,
+    silenceTime:0,   // 静默时间（可扩展为自定义，单位：分钟）
     callBack:(par:unknown)=>{}
 }
 
 // 信息处理
-export function inforDispose(par:unknown){
+export function inforDispose(par:any){
     if(monitorConfig.useAble){
-        monitorConfig.callBack(par)
+        if(monitorConfig.silenceTime){
+            monitorConfig.callBack({...par,silenceTime})
+        }else{
+            monitorConfig.callBack(par)
+        }
+    }else{
+        console.warn('请检查是否注册 v-monitor')
     }
 }
 
@@ -29,6 +37,7 @@ function monitorCore(callBack:any){
         if(typeof(callBack) == 'function'){
             monitorConfig = {
                 callBack,   // 回调函数
+                silenceTime:0,
                 useAble:true    // 监控可用
             }
         }else{
@@ -84,6 +93,19 @@ function monitorListener(el:Event){
     }
 }
 
+// 配置重置
+function resetConfig(){
+    // 信息重置，避免误将 v-monitor 卸载
+    isStartMediaMonitor = false // 是否开启媒体监听
+    isStartOperMonitor = false // 是否开启操作监听
+    silenceTime = []
+    monitorConfig = {
+        useAble:false,
+        silenceTime:0,   // 静默时间（可扩展为自定义，单位：分钟）
+        callBack:(par:unknown)=>{}
+    }
+}
+
 const monitor = {
     name: 'monitor',
     dir: {
@@ -91,8 +113,11 @@ const monitor = {
             monitorCore(binding.value)
         },
         beforeUnmount(el: HTMLElement): void {
-            //  解除监听
+            // 解除监听
             window.removeEventListener('click',monitorListener)
+            window.removeEventListener('error',monitorListener)
+            window.removeEventListener('ended',monitorListener)
+            resetConfig()
         }
     }
 };

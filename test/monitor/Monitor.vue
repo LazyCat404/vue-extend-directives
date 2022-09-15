@@ -1,8 +1,10 @@
 <template>
     <div v-monitor="acceptMonitorInfor">
-        <button @click="state.isPage=false">隐藏</button>
-        <button v-oper @click="state.isPage=true">显示</button>
-        <div v-show="state.isPage" class="monitor-page">
+        <div v-oper>
+            <button @click="state.isPage=false">隐藏</button>
+            <button @click="state.isPage=true">显示</button>
+        </div>
+        <div v-page v-show="state.isPage" class="monitor-page">
             <audio v-media controls="true">
                 <source src="./assets/test.mp3" type="audio/mpeg" />
             </audio>
@@ -30,5 +32,8 @@ function acceptMonitorInfor(par:unknown){
     display: flex;                      
     justify-content:center;           
     align-items:center;            
+}img{
+    width: 400px;
+    height: 400px;
 }
 </style>
