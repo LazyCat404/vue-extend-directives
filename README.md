@@ -24,6 +24,10 @@ app.use(vueExtendDirectives);
 
     ![](./images/v-hide.png)
 
+## 指令: v-int
+
+- 用处：input 只能输入数字
+
 ## 指令：v-contextmenu
 
 - 用处：右键菜单

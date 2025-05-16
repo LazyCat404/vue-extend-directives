@@ -8,12 +8,14 @@
         <h3>v-hide</h3>
         <Hide></Hide>
     </li>
+    <li>
+       <input v-int>
+    </li>
  </ul>
 </template>
 <script lang="ts" setup>
 import Hide from './hide/Hide.vue';
 import ContextMenu from './contextmenu/Index.vue'
-
 
 </script>
 
